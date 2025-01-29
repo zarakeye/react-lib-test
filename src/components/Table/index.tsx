@@ -29,6 +29,9 @@ const Table: React.FC<TableProps<Record<string, any>>> = ({ data }): JSX.Element
   const [restOfEntries, setRestOfEntries] = useState<number>(0);
   const [displayedRange, setDisplayedRange] = useState<Record<string, any>[]>([]);
 
+  const alphabeticalSortButtonRef = React.useRef<HTMLButtonElement>(null);
+  const reverseAlphabeticalSortButtonRef = React.useRef<HTMLButtonElement>(null);
+
   const flattenedKeys = data.length > 0 ? getFlattenedKeys(data[0]) : [];
   console.log('keys', flattenedKeys);
 
@@ -67,16 +70,25 @@ const Table: React.FC<TableProps<Record<string, any>>> = ({ data }): JSX.Element
         </select>
         <label htmlFor="displayedEntries">Displayed entries</label>
       </div>
-      <table className='w-full border-2'>
-        <thead>
-          <tr>
+      <table className='flex flex-col border-2 table-fixed'>
+        <thead className='flex flex-row'>
+          <tr className='flex'>
             {flattenedKeys.map((key, index) => (
-              <th key={index} className='px-[10px] border-2'>{key.split('.').pop()}</th>
+              <th key={index} className='flex flex-row px-[10px] border-2'>
+                <p className='mr-[10px]'>{key.split('.').pop()}</p>
+                <div className='flex flex-col gap-x-[5px]'>
+                  <button type='button' ref={alphabeticalSortButtonRef}>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="10px" viewBox="0 -960 960 960" width="10px" fill="#e8eaed"><path d="M152-160q-23 0-35-20.5t1-40.5l328-525q12-19 34-19t34 19l328 525q13 20 1 40.5T808-160H152Z"/></svg>
+                  </button>
+                  <button type='button' ref={reverseAlphabeticalSortButtonRef}>
+                  <svg className='rotate-180' xmlns="http://www.w3.org/2000/svg" height="10px" viewBox="0 -960 960 960" width="10px" fill="#e8eaed"><path d="M152-160q-23 0-35-20.5t1-40.5l328-525q12-19 34-19t34 19l328 525q13 20 1 40.5T808-160H152Z"/></svg>
+                  </button>
+                </div>
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {/* {data.map((item, index) => ( */}
           {displayedRange.map((item, index) => ( 
             <tr key={index}>
               {flattenedKeys.map((key, colIndex) => {
